@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregătire Ofițer Evidență — Penitenciare</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>📚 Pregătire Ofițer Evidență</h1>
+        <p class="subtitle">Aplicație de studiu pentru concursul de ofițer penitenciare — specializarea Evidență</p>
+    </header>
+
+    <nav id="mainNav">
+        <button data-view="dashboard" class="active">Acasă</button>
+        <button data-view="modules">Bibliotecă</button>
+        <button data-view="flashcards">Flashcards</button>
+        <button data-view="quiz">Quiz</button>
+        <button data-view="duties">Atribuții</button>
+        <button data-view="search">Căutare</button>
+        <button data-view="stats">Statistici</button>
+    </nav>
+
+    <main id="app" aria-live="polite">
+        <!-- Conținutul dinamic va fi randat aici de app.js -->
+    </main>
+
+    <footer>
+        <p>Progres salvat local în browser. Poți studia offline.</p>
+    </footer>
+
+    <!-- Fișierele de date se încarcă dinamic, conform manifestului -->
+    <script src="js/data/manifest.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
