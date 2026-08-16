@@ -1,0 +1,453 @@
+/* ===========================================================
+   Pregătire Ofițer Evidență – Stiluri generale
+   =========================================================== */
+
+:root {
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --muted: #5a5a7a;
+    --accent: #1e3a8a;
+    --accent-light: #dbeafe;
+    --accent-hover: #1e40af;
+    --border: #e2e8f0;
+    --danger: #b91c1c;
+    --danger-bg: #fee2e2;
+    --success: #047857;
+    --success-bg: #dcfce7;
+    --warning: #b45309;
+    --warning-bg: #fef9c3;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --radius: 12px;
+    --transition: 0.2s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===========================================================
+   Header
+   =========================================================== */
+header {
+    background: var(--accent);
+    color: white;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+header .subtitle {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* ===========================================================
+   Navigare
+   =========================================================== */
+nav {
+    background: var(--surface);
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+nav button {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+}
+
+nav button:hover {
+    color: var(--accent);
+    background: #f8fafc;
+}
+
+nav button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+
+/* ===========================================================
+   Main și footer
+   =========================================================== */
+main {
+    flex: 1;
+    padding: 1.25rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* ===========================================================
+   Carduri
+   =========================================================== */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+}
+
+.card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.card .muted {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* ===========================================================
+   Liste și elemente interactive
+   =========================================================== */
+.list-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-item:hover {
+    background: #f8fafc;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.badge {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    white-space: nowrap;
+}
+
+/* ===========================================================
+   Butoane
+   =========================================================== */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===========================================================
+   Formulare
+   =========================================================== */
+input[type="text"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--accent-light);
+    border-color: var(--accent);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* ===========================================================
+   Bara de progres
+   =========================================================== */
+.progress-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* ===========================================================
+   Flashcards
+   =========================================================== */
+.flashcard {
+    perspective: 1000px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    min-height: 220px;
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+    min-height: inherit;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow);
+    min-height: inherit;
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+    background: #f0f9ff;
+    border-color: #bae6fd;
+}
+
+/* ===========================================================
+   Quiz
+   =========================================================== */
+.quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    margin: 0.4rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.quiz-option:hover:not(:disabled) {
+    background: var(--accent-light);
+    border-color: var(--accent);
+}
+
+.quiz-option.correct {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+    font-weight: 500;
+}
+
+.quiz-option.wrong {
+    background: var(--danger-bg);
+    border-color: var(--danger);
+    color: var(--danger);
+    font-weight: 500;
+}
+
+.quiz-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.score {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ===========================================================
+   Mesaje placeholder
+   =========================================================== */
+.placeholder {
+    background: var(--warning-bg);
+    border-left: 4px solid #eab308;
+    padding: 0.75rem 1rem;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: #713f12;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+/* ===========================================================
+   Grid și utilitare
+   =========================================================== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+
+/* ===========================================================
+   Responsive
+   =========================================================== */
+@media (max-width: 700px) {
+    header h1 {
+        font-size: 1.1rem;
+    }
+
+    header .subtitle {
+        font-size: 0.75rem;
+    }
+
+    nav button {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    main {
+        padding: 1rem 0.75rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .flashcard {
+        min-height: 180px;
+    }
+}
