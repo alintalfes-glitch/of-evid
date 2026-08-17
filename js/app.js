@@ -129,6 +129,11 @@ function navigate(view, param) {
 }
 
 function renderView(view, param) {
+    // Reset căutare la navigarea normală
+    if (view !== 'article' && view !== 'search') {
+        currentSearchQuery = '';
+    }
+
     document.querySelectorAll('#mainNav button').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === view);
     });
@@ -138,25 +143,21 @@ function renderView(view, param) {
 
     switch (view) {
         case 'modules':
-            currentSearchQuery = '';  // reset la navigarea normală
             renderModules(app);
             break;
         case 'module':
-            currentSearchQuery = '';
             renderModuleDetail(app, param);
             break;
         case 'article':
             renderArticle(app, param);
             break;
         case 'duties':
-            currentSearchQuery = '';
             renderDuties(app);
             break;
         case 'search':
             renderSearch(app);
             break;
         default:
-            currentSearchQuery = '';
             renderModules(app);
     }
 
@@ -266,7 +267,7 @@ function renderModuleDetail(container, moduleId) {
 // Randare: Articol individual (deschide modulul și derulează)
 // ===========================================================
 function renderArticle(container, articleParam) {
-    // articleParam poate fi "id?q=termen"
+    // articleParam poate fi "id" sau "id?q=termen"
     const [articleId, queryPart] = articleParam.split('?');
     const query = queryPart ? decodeURIComponent(queryPart.replace('q=', '')) : '';
     currentSearchQuery = query;
@@ -404,14 +405,15 @@ async function loadAllDataFiles() {
 function init() {
     // --- Dark mode ---
     const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
         themeToggle.addEventListener('click', () => {
-            const current = document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', next);
+            document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
         });
@@ -448,11 +450,8 @@ function init() {
     window.addEventListener('hashchange', () => {
         const hash = location.hash.slice(2);
         const [view, param] = hash.split('/');
-        // param poate conține "?" pentru query; dar aici îl pasăm ca întreg,
-        // iar renderView îl va gestiona.
-        // Pentru view-urile simple, param poate fi undefined.
-        const cleanParam = param ? param : undefined;
-        renderView(view || 'modules', cleanParam);
+        // param poate conține "?"; îl pasăm ca întreg.
+        renderView(view || 'modules', param ? param : undefined);
     });
 
     // --- Randare inițială ---
