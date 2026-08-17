@@ -1,7 +1,7 @@
 // ===========================================================
 // Codul de procedură penală – Legea nr. 135/2010 – date legislative
 // ===========================================================
-// Structură plată: sections -> subsections -> articles
+// Structură conform bibliografiei, cu textele integrale furnizate.
 // ===========================================================
 
 window.appData.legislation.push({
