@@ -1,6 +1,7 @@
 // ===========================================================
 // Spețe interviu – Ofițer Evidență
 // Modul de pregătire pentru proba de interviu
+// Include: spețe pentru ofițer evidență și înlocuitor șef serviciu evidență
 // ===========================================================
 
 window.appData.examMethodologies.push({
@@ -106,7 +107,7 @@ Pentru cursul de calificare/recalificare profesională absolvit, se consideră 2
 Un deținut are două pedepse: 3 ani și 5 ani, contopite în 6 ani. A fost arestat preventiv 1 an în primul dosar și 6 luni în al doilea, dar perioadele se suprapun parțial. Cum calculați durata rămasă de executat?
 
 SUGESTIE RĂSPUNS:
-Aplic regulile de la art. 72 din Codul penal privind computarea măsurilor preventive: perioada în care persoana a fost supusă unei măsuri preventive privative de libertate se scade din durata pedepsei închisorii pronunțate, chiar dacă a fost urmărită pentru mai multe infracțiuni concurente. Dacă perioadele de arest se suprapun, se scade o singură dată, nu cumulativ. Calculez exact perioada totală efectivă de private de libertate înainte de condamnare și o deduc din pedeapsa rezultantă de 6 ani. De asemenea, adaug zilele considerate ca executate pe baza muncii. Documentez calculul și îl verific cu șeful biroului evidență.`
+Aplic regulile de la art. 72 din Codul penal privind computarea măsurilor preventive: perioada în care persoana a fost supusă unei măsuri preventive privative de libertate se scade din durata pedepsei închisorii pronunțate, chiar dacă a fost urmărită pentru mai multe infracțiuni concurente. Dacă perioadele de arest se suprapun, se scade o singură dată, nu cumulativ. Calculez exact perioada totală efectivă de private de libertate înainte de condamnare și o deduc din pedeapsa rezultantă de 6 ani. De asemenea, adaug zilele considerate ca executate pe baza muncii. Documentez calculul și îl verific cu șeful serviciului evidență.`
                         }
                     ]
                 },
@@ -234,6 +235,159 @@ Descoperiți că un deținut nou depus este rudă de gradul I cu un coleg ofițe
 
 SUGESTIE RĂSPUNS:
 Conform art. 121 din Legea nr. 145/2019, nu sunt permise raporturile ierarhice directe între soți sau rude de gradul I. Dacă intervine un conflict de interese, polițistul trebuie să se abțină și să informeze de îndată șeful ierarhic direct. În cazul meu, dacă situația mă privește direct, mă abțin de la orice decizie sau operațiune legată de acea persoană și informez șeful pentru a lua măsurile necesare, în termen de cel mult 3 zile.`
+                        }
+                    ]
+                },
+                {
+                    title: 'Coordonarea serviciului evidență – înlocuitor șef serviciu',
+                    articles: [
+                        {
+                            num: '21',
+                            title: 'Primirea unei persoane condamnate cu documente incomplete',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. La primirea unui deținut condamnat, constatați că dosarul de la organul de poliție nu conține fișa de cunoaștere individuală. Ce faceți?
+
+SUGESTIE RĂSPUNS:
+Conform art. 97 alin. (9) din HG 157/2016, în cazul în care la primirea în locul de deținere nu sunt îndeplinite condițiile privind fișa de cunoaștere individuală, penitenciarul va primi deținutul, urmând ca documentele care trebuiau să îl însoțească să fie transmise în termen de 20 de zile lucrătoare.
+
+Primesc persoana, întocmesc un proces-verbal de constatare a lipsei documentului și anunț organul de poliție. Urmăresc primirea fișei și, la expirarea termenului, dacă nu a sosit, întreprind demersuri suplimentare.
+
+Nu refuz primirea pentru această lipsă, deoarece legea permite primirea și regularizarea ulterioară.`
+                        },
+                        {
+                            num: '22',
+                            title: 'Calculul zilelor considerate executate pe baza muncii (coordonare)',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. Un agent de evidență vă prezintă o situație: un deținut a prestat 12 zile de muncă remunerată și 9 nopți de muncă neremunerată. Câte zile se consideră executate suplimentar pentru liberarea condiționată?
+
+SUGESTIE RĂSPUNS:
+Aplic art. 96 din Legea 254/2013:
+
+- pentru munca remunerată: 5 zile executate pentru 4 zile de muncă: 12 zile lucrate × 5/4 = 15 zile câștigate;
+- pentru munca neremunerată pe timp de noapte: 3 zile executate pentru 2 nopți de muncă: 9 nopți × 3/2 = 13,5 zile → se iau în calcul doar zilele întregi, deci 13 zile.
+
+Total: 15 + 13 = 28 de zile considerate ca executate.
+
+Aceste zile se adaugă la fracțiunea de pedeapsă executată, dar liberarea condiționată nu poate interveni înainte de fracțiile minime prevăzute de Codul penal.`
+                        },
+                        {
+                            num: '23',
+                            title: 'Verificarea termenului de expirare a mandatului de arestare preventivă',
+                            fullText: `ÎNTREBARE:
+Sunteți înlocuitorul șefului serviciului evidență. În timpul verificării zilnice a registrului de evidență observați că un mandat de arestare preventivă expiră peste 3 zile, iar instanța nu a comunicat prelungirea. Cum acționați?
+
+SUGESTIE RĂSPUNS:
+Potrivit fișei postului, am obligația de a ține evidența termenelor de expirare a mandatelor de arestare preventivă și de a interveni operativ la organele în drept pentru obținerea documentelor de prelungire.
+
+Verific dacă există vreo prelungire deja emisă, dar neînregistrată. Dacă nu există, întocmesc o sesizare către instanța competentă și informez șeful ierarhic.
+
+În cazul în care termenul expiră și nu s-a primit prelungirea, arestarea preventivă încetează de drept, conform art. 241 alin. (1) lit. a) din Codul de procedură penală, iar eu trebuie să sesizez de îndată administrația pentru punerea în libertate, dacă nu există alt temei de deținere.`
+                        },
+                        {
+                            num: '24',
+                            title: 'Schimbarea regimului de executare – calculul fracțiunii',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. Un deținut condamnat la 12 ani închisoare, aflat în regim închis, a executat 2 ani și 5 luni. Poate fi analizat în comisia pentru schimbarea regimului în semideschis?
+
+SUGESTIE RĂSPUNS:
+Conform art. 40 alin. (2) din Legea 254/2013, pentru pedeapsa închisorii, comisia analizează situația deținutului după executarea a unei cincimi din durata pedepsei.
+
+Pentru 12 ani, fracția de o cincime = 12 ani × 1/5 = 2,4 ani, adică 2 ani, 4 luni și 24 de zile (0,4 × 12 luni = 4,8 luni, deci 4 luni și 0,8 × 30 zile ≈ 24 zile).
+
+Deținutul a executat 2 ani și 5 luni, deci a depășit această fracție. Prin urmare, poate fi analizat de comisie pentru schimbarea regimului, dacă și celelalte condiții sunt îndeplinite (bună conduită, eforturi de reintegrare).`
+                        },
+                        {
+                            num: '25',
+                            title: 'Conflictele de interese în cadrul serviciului evidență',
+                            fullText: `ÎNTREBARE:
+Sunteți înlocuitorul șefului serviciului evidență și aflați că un ofițer din subordine este soțul unei persoane private de libertate recent depuse. Ce măsuri luați?
+
+SUGESTIE RĂSPUNS:
+Conform art. 121 din Legea 145/2019, există conflict de interese când polițistul este soț/soție cu o persoană fizică implicată în proceduri. Nu sunt permise raporturi ierarhice directe între soți sau rude de gradul I.
+
+Iau măsura imediată de a-l scoate pe ofițer din orice activitate care privește dosarul sau situația persoanei respective.
+
+Informez șeful ierarhic direct, care trebuie să ia măsurile necesare în termen de cel mult 3 zile pentru exercitarea imparțială a funcției.
+
+Asigur repartizarea dosarului către alt ofițer, fără ca ofițerul aflat în conflict să aibă acces la documentele respective.`
+                        },
+                        {
+                            num: '26',
+                            title: 'Eliberarea condiționată – propunerea comisiei',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. La întocmirea procesului-verbal pentru comisia de liberare condiționată, ce date trebuie să conțină partea preconstituită de serviciul evidență?
+
+SUGESTIE RĂSPUNS:
+Conform art. 205 alin. (3) din HG 157/2016, serviciul evidență întocmește partea preconstituită a procesului-verbal, care cuprinde:
+
+- datele de stare civilă;
+- condamnarea și fapta;
+- descrierea pe scurt a faptei;
+- modul de calcul al fracțiunilor prevăzute de Codul penal;
+- antecedentele penale, cu precizarea dacă este recidivist;
+- existența vreunui mandat de arestare preventivă sau hotărâre de condamnare în primă instanță;
+- regimul de executare;
+- dacă a mai beneficiat de liberare condiționată;
+- recompensele acordate și sancțiunile aplicate;
+- dacă a mai fost analizat în comisie.
+
+Această parte este strict obiectivă, fără propuneri; propunerile se fac de comisie.`
+                        },
+                        {
+                            num: '27',
+                            title: 'Transferarea temporară a unui deținut la solicitarea organului judiciar',
+                            fullText: `ÎNTREBARE:
+Sunteți înlocuitorul șefului serviciului evidență. Parchetul solicită transferul temporar al unui deținut pentru audiere. Care este competența de aprobare?
+
+SUGESTIE RĂSPUNS:
+Potrivit art. 45 alin. (3) din Legea 254/2013, transferarea persoanelor condamnate în alt penitenciar, dacă este necesară activității unui organ judiciar, se dispune la solicitarea organului judiciar de către directorul penitenciarului.
+
+Dacă în aceeași perioadă deținutul este solicitat de mai multe organe judiciare, transferul temporar se dispune de directorul general al Administrației Naționale a Penitenciarelor.
+
+Ca serviciu evidență, pregătesc documentația și asigur înregistrarea transferului, respectând termenul și condițiile legale.`
+                        },
+                        {
+                            num: '28',
+                            title: 'Comunicarea punerii în libertate',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. Ce comunicări trebuie făcute la punerea în libertate a unui deținut condamnat?
+
+SUGESTIE RĂSPUNS:
+Conform art. 53 alin. (1) din Legea 254/2013, administrația penitenciarului comunică punerea în libertate organului judiciar care a dispus măsura și, dacă este cazul, celui care controlează executarea măsurilor de supraveghere.
+
+În plus, trebuie să se informeze persoana vătămată, conform art. 53 alin. (2), dacă este cazul.
+
+Pentru deținuții străini, art. 116 alin. (9) din HG 157/2016 prevede comunicarea cu 5 zile înainte de expirare către Inspectoratul General pentru Imigrări.
+
+Toate comunicările se fac în scris și se înregistrează.`
+                        },
+                        {
+                            num: '29',
+                            title: 'Primirea unui mandat de executare prin mijloace electronice',
+                            fullText: `ÎNTREBARE:
+Sunteți înlocuitorul șefului serviciului evidență. Poliția anunță că aduce un deținut cu mandatul de executare transmis doar prin poștă electronică. Acceptați primirea?
+
+SUGESTIE RĂSPUNS:
+Da. Conform art. 97 alin. (1) din HG 157/2016, deținuții sunt primiți și în baza mandatului primit prin fax sau poștă electronică, dacă documentul permite stabilirea autenticității.
+
+Verific atent datele, semnătura și ștampila. Persoana este primită, iar originalul mandatului trebuie să fie înaintat locului de deținere într-un termen rezonabil, dar nu mai mult de 20 de zile lucrătoare.
+
+Înregistrez documentul și urmăresc primirea originalului; la expirarea termenului, dacă nu a sosit, solicit organului emitent.`
+                        },
+                        {
+                            num: '30',
+                            title: 'Coordonarea activității serviciului evidență în condiții de personal redus',
+                            fullText: `ÎNTREBARE:
+Înlocuiți șeful serviciului evidență. Doi ofițeri lipsesc simultan (concediu medical) și aveți doar agenți de evidență disponibili. Cum asigurați îndeplinirea sarcinilor critice?
+
+SUGESTIE RĂSPUNS:
+Prioritizez sarcinile cu termene legale imperative: verificarea registrului de termene, punerile în libertate, prelucrarea mandatelor nou-sosite.
+
+Redistribui temporar sarcinile între personalul disponibil, inclusiv agenții, fără a încălca principiul separației atribuțiilor. Agenții pot prelua activități de operare și de culegere a datelor, iar ofițerii rămași (sau eu) verifică și validează documentele.
+
+Dacă volumul este prea mare, informez șeful ierarhic și solicit sprijin de la alte structuri sau prelungirea programului.
+
+Esențial este să nu se depășească termenele și să se păstreze calitatea actelor de evidență.`
                         }
                     ]
                 }
