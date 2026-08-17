@@ -25,47 +25,6 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
-
-    <!-- Stiluri specifice pentru header și butonul de temă -->
-    <style>
-        header {
-            position: relative;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: #fff;
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            font-size: 1.3rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease, transform 0.2s ease;
-            z-index: 5;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-
-        @media (max-width: 700px) {
-            .theme-toggle {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-                top: 0.75rem;
-                right: 0.75rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -78,8 +37,9 @@
     </header>
 
     <nav id="mainNav" aria-label="Navigare principală">
-        <button data-view="modules" class="active">Legislație</button>
-        <button data-view="duties">Fișa postului</button>
+        <button data-view="legislatie" class="active">Legislație</button>
+        <button data-view="duties">Descrierea postului</button>
+        <button data-view="probe">Probe concurs</button>
         <button data-view="search">Căutare</button>
     </nav>
 
@@ -90,8 +50,9 @@
     </footer>
 
     <script>
+        // Deschide direct secțiunea Legislație
         if (!location.hash) {
-            location.hash = '#/modules';
+            location.hash = '#/legislatie';
         }
     </script>
 
