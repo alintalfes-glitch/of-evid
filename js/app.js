@@ -1,6 +1,7 @@
 // ===========================================================
 // Pregătire Ofițer Evidență – Logica aplicației
 // Fără cuprins sticky, fără progres, fără quiz/flashcards
+// Cu format special pentru spețe de interviu
 // ===========================================================
 
 window.appData = {
@@ -60,6 +61,45 @@ function getAllArticles() {
 
 function getArticleById(id) {
     return getAllArticles().find(a => a.id === id);
+}
+
+// ===========================================================
+// Formatare specială pentru spețe
+// ===========================================================
+function formatSpețăArticle(art) {
+    if (!art.fullText) {
+        return '<div class="placeholder">Textul integral urmează să fie adăugat.</div>';
+    }
+
+    const text = art.fullText;
+    const qMarker = 'ÎNTREBARE:';
+    const aMarker = 'SUGESTIE RĂSPUNS:';
+    const qIndex = text.indexOf(qMarker);
+    const aIndex = text.indexOf(aMarker);
+
+    if (qIndex === -1 || aIndex === -1) {
+        // fallback la afișare clasică
+        return `<div class="article-fulltext">${escapeHtml(text)}</div>`;
+    }
+
+    const questionText = text.substring(qIndex + qMarker.length, aIndex).trim();
+    const answerText = text.substring(aIndex + aMarker.length).trim();
+
+    return `
+        <div class="speta-block">
+            <div class="speta-question">
+                <strong>ÎNTREBARE</strong>
+                <p style="margin-top:0.3rem; white-space:pre-wrap;">${escapeHtml(questionText)}</p>
+            </div>
+            <details class="speta-answer-details">
+                <summary class="btn btn-small">Afișează răspuns</summary>
+                <div class="speta-answer">
+                    <strong>SUGESTIE RĂSPUNS</strong>
+                    <p style="margin-top:0.3rem; white-space:pre-wrap;">${escapeHtml(answerText)}</p>
+                </div>
+            </details>
+        </div>
+    `;
 }
 
 // ===========================================================
@@ -163,10 +203,17 @@ function renderModuleDetail(container, moduleId) {
                     } else {
                         sub.articles.forEach(art => {
                             const artId = generateArticleId(mod.id, art.num);
+                            const isSpeta = mod.id === 'spete';
+                            const contentHtml = isSpeta
+                                ? formatSpețăArticle(art)
+                                : (art.fullText
+                                    ? `<div class="article-fulltext">${escapeHtml(art.fullText)}</div>`
+                                    : `<div class="placeholder">Textul integral urmează să fie adăugat.</div>`);
+
                             html += `
                                 <div id="${artId}" style="padding-top:1rem; margin-top:1rem; border-top:1px solid #e5e7eb;">
                                     <h4 style="color:var(--accent); font-weight:600; margin-bottom:0.5rem;">Art. ${escapeHtml(art.num)} – ${escapeHtml(art.title)}</h4>
-                                    ${art.fullText ? `<div class="article-fulltext">${escapeHtml(art.fullText)}</div>` : `<div class="placeholder">Textul integral urmează să fie adăugat.</div>`}
+                                    ${contentHtml}
                                 </div>
                             `;
                         });
@@ -199,7 +246,6 @@ function scrollToArticle(articleId) {
     const el = document.getElementById(articleId);
     if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Ajustare pentru nav sticky
         const nav = document.getElementById('mainNav');
         if (nav) {
             const navHeight = nav.getBoundingClientRect().height;
@@ -308,6 +354,76 @@ async function loadAllDataFiles() {
 // Inițializare
 // ===========================================================
 function init() {
+    // Stiluri suplimentare pentru spețe și back-to-top
+    const style = document.createElement('style');
+    style.textContent = `
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition), transform var(--transition);
+            z-index: 20;
+        }
+        .back-to-top:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .back-to-top.visible {
+            display: flex;
+        }
+
+        .speta-block {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #fafbff;
+            box-shadow: var(--shadow-sm);
+        }
+        .speta-question {
+            margin-bottom: 0.5rem;
+        }
+        .speta-answer-details {
+            margin-top: 0.5rem;
+            border-top: 1px dashed var(--border);
+            padding-top: 0.5rem;
+        }
+        .speta-answer-details summary {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--accent);
+            display: inline-block;
+        }
+        .speta-answer {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        @media (max-width: 700px) {
+            .back-to-top {
+                bottom: 1.25rem;
+                right: 1.25rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.3rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
     // Crează butonul "Înapoi sus"
     const backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
@@ -319,7 +435,6 @@ function init() {
     });
     document.body.appendChild(backToTop);
 
-    // Ascunde/afișează butonul în funcție de scroll
     window.addEventListener('scroll', () => {
         if (window.scrollY > 400) {
             backToTop.classList.add('visible');
