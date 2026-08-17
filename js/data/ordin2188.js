@@ -6,9 +6,9 @@
 // ===========================================================
 window.appData.legislation.push({
     id: 'omj2188',
-    name: 'Instrucțiuni din 18 mai 2022 privind evidența nominală și statistică a persoanelor private de libertate determinată de primire, punerea în executare a pedepselor și măsurilor privative de libertate, stabilirea și schimbarea regimului de executare, punerea în libertate și comunicarea actelor de procedură (aprobate prin Ordinul MJ nr. 2.188/C din 18 mai 2022)',
+    name: 'Ordinul MJ nr. 2188/C/2022)',
     type: 'legislatie',
-    description: 'Evidența persoanelor private de libertate: primirea și înregistrarea, calculul pedepselor și fracțiunilor pentru liberarea condiționată, stabilirea/modificarea regimului de executare, transferurile, punerea în libertate și întreruperea executării, evadarea și decesul, arestarea preventivă, măsurile educative privative de libertate, gestionarea dosarului individual, comunicarea actelor de procedură și regimul persoanelor străine.',
+    description: 'Instrucțiuni privind evidența persoanelor private de libertate',
     sections: [
         // =====================================================
         // TITLUL I - Dispoziții generale
