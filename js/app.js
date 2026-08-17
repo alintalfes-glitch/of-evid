@@ -1,6 +1,7 @@
 // ===========================================================
 // Portal Ofițer Evidență – Logica aplicației
-// Include: dark mode, căutare cu evidențiere, secțiuni pliabile
+// Include: dark mode, căutare cu evidențiere, secțiuni pliabile,
+// navigare separată: Legislație / Descrierea postului / Probe concurs / Căutare
 // ===========================================================
 
 window.appData = {
@@ -27,6 +28,14 @@ function escapeHtml(str) {
 
 function generateArticleId(moduleId, articleNum) {
     return `${moduleId}-art${articleNum}`;
+}
+
+function getAllLegislation() {
+    return window.appData.legislation;
+}
+
+function getAllProbe() {
+    return window.appData.examMethodologies;
 }
 
 function getAllModules() {
@@ -122,6 +131,12 @@ function formatSpețăArticle(art) {
 // ===========================================================
 // Navigare
 // ===========================================================
+function setActiveNav(activeView) {
+    document.querySelectorAll('#mainNav button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === activeView);
+    });
+}
+
 function navigate(view, param) {
     const hash = param ? `#/${view}/${param}` : `#/${view}`;
     location.hash = hash;
@@ -129,46 +144,57 @@ function navigate(view, param) {
 }
 
 function renderView(view, param) {
-    // Reset căutare la navigarea normală
+    // Reset căutare la navigarea normală, exceptând articol sau căutare
     if (view !== 'article' && view !== 'search') {
         currentSearchQuery = '';
     }
-
-    document.querySelectorAll('#mainNav button').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === view);
-    });
 
     const app = document.getElementById('app');
     app.innerHTML = '';
 
     switch (view) {
-        case 'modules':
-            renderModules(app);
+        case 'legislatie':
+            setActiveNav('legislatie');
+            renderLegislatie(app);
+            break;
+        case 'probe':
+            setActiveNav('probe');
+            renderProbe(app);
+            break;
+        case 'duties':
+            setActiveNav('duties');
+            renderDuties(app);
+            break;
+        case 'search':
+            setActiveNav('search');
+            renderSearch(app);
             break;
         case 'module':
+            // Determinăm tipul modulului pentru a seta nav-ul activ corect
+            const mod = getAllModules().find(m => m.id === param);
+            if (mod) {
+                setActiveNav(mod.type === 'probă' ? 'probe' : 'legislatie');
+            } else {
+                setActiveNav('legislatie');
+            }
             renderModuleDetail(app, param);
             break;
         case 'article':
             renderArticle(app, param);
             break;
-        case 'duties':
-            renderDuties(app);
-            break;
-        case 'search':
-            renderSearch(app);
-            break;
         default:
-            renderModules(app);
+            setActiveNav('legislatie');
+            renderLegislatie(app);
     }
 
     window.scrollTo(0, 0);
 }
 
 // ===========================================================
-// Randare: Bibliotecă
+// Randare: Legislație
 // ===========================================================
-function renderModules(container) {
-    const modules = getAllModules();
+function renderLegislatie(container) {
+    const modules = getAllLegislation();
     let html = `<div class="card card-intro">
         <div>
             <h2>📚 Legislație</h2>
@@ -184,7 +210,67 @@ function renderModules(container) {
                     <h3>${escapeHtml(mod.name)}</h3>
                     <p class="muted">${escapeHtml(mod.description || '')}</p>
                 </div>
-                <span class="badge">${mod.type === 'probă' ? 'Probă concurs' : 'Legislație'}</span>
+                <span class="badge">Legislație</span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ===========================================================
+// Randare: Probe concurs
+// ===========================================================
+function renderProbe(container) {
+    const modules = getAllProbe();
+    let html = `<div class="card card-intro">
+        <div>
+            <h2>📝 Probe concurs</h2>
+            <p class="muted">Metodologii și spețe pentru pregătirea probelor de concurs.</p>
+        </div>
+        <div class="intro-icon">🎯</div>
+    </div>`;
+
+    modules.forEach(mod => {
+        html += `
+            <div class="card list-item" onclick="navigate('module','${mod.id}')" style="cursor:pointer;">
+                <div>
+                    <h3>${escapeHtml(mod.name)}</h3>
+                    <p class="muted">${escapeHtml(mod.description || '')}</p>
+                </div>
+                <span class="badge">Probă</span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ===========================================================
+// Randare: Descrierea postului (atribuții)
+// ===========================================================
+function renderDuties(container) {
+    const duties = window.appData.duties;
+    if (!duties || duties.length === 0) {
+        container.innerHTML = `<div class="card"><h2>📋 Descrierea postului</h2><div class="placeholder">Fișa postului nu a fost încă adăugată.</div></div>`;
+        return;
+    }
+
+    let html = `<div class="card"><h2>📋 Atribuțiile postului – Ofițer Evidență</h2><p class="muted">Fiecare atribuție poate fi legată de articolele relevante.</p></div>`;
+
+    duties.forEach(duty => {
+        const links = duty.linkedArticles && duty.linkedArticles.length
+            ? duty.linkedArticles.map(id => {
+                const art = getArticleById(id);
+                if (art) {
+                    return `<button class="btn btn-small" onclick="navigate('article','${id}')">${escapeHtml(art.moduleName)} art. ${escapeHtml(art.articleNum)}</button>`;
+                }
+                return `<span class="muted">${escapeHtml(id)}</span>`;
+            }).join(' ')
+            : '<em>De completat</em>';
+
+        html += `
+            <div class="card">
+                <p><strong>${escapeHtml(duty.id)}.</strong> ${escapeHtml(duty.text)}</p>
+                <div class="muted mt-1">Articole relevante: ${links}</div>
             </div>
         `;
     });
@@ -198,7 +284,7 @@ function renderModules(container) {
 function renderModuleDetail(container, moduleId) {
     const mod = getAllModules().find(m => m.id === moduleId);
     if (!mod) {
-        container.innerHTML = `<div class="card">Modul inexistent. <button class="btn" onclick="navigate('modules')">Înapoi</button></div>`;
+        container.innerHTML = `<div class="card">Modul inexistent. <button class="btn" onclick="navigate('legislatie')">Înapoi</button></div>`;
         return;
     }
 
@@ -206,7 +292,7 @@ function renderModuleDetail(container, moduleId) {
         <div class="card">
             <h2>${escapeHtml(mod.name)}</h2>
             <p class="muted">${escapeHtml(mod.description || '')}</p>
-            <button class="btn" onclick="navigate('modules')">← Înapoi la legislație</button>
+            <button class="btn" onclick="navigate('${mod.type === 'probă' ? 'probe' : 'legislatie'}')">← Înapoi</button>
         </div>
     `;
 
@@ -274,9 +360,12 @@ function renderArticle(container, articleParam) {
 
     const article = getArticleById(articleId);
     if (!article) {
-        container.innerHTML = `<div class="card">Articol inexistent. <button class="btn" onclick="navigate('modules')">Înapoi</button></div>`;
+        container.innerHTML = `<div class="card">Articol inexistent. <button class="btn" onclick="navigate('legislatie')">Înapoi</button></div>`;
         return;
     }
+
+    // Setăm nav-ul activ pe secțiunea corespunzătoare
+    setActiveNav(article.moduleType === 'probă' ? 'probe' : 'legislatie');
 
     renderModuleDetail(container, article.moduleId);
     scrollToArticle(articleId);
@@ -302,40 +391,6 @@ window.toggleAllSections = function(expand) {
         d.open = expand;
     });
 };
-
-// ===========================================================
-// Randare: Atribuții post
-// ===========================================================
-function renderDuties(container) {
-    const duties = window.appData.duties;
-    if (!duties || duties.length === 0) {
-        container.innerHTML = `<div class="card"><h2>📋 Fișa postului</h2><div class="placeholder">Fișa postului nu a fost încă adăugată.</div></div>`;
-        return;
-    }
-
-    let html = `<div class="card"><h2>📋 Atribuțiile postului – Ofițer Evidență</h2><p class="muted">Fiecare atribuție poate fi legată de articolele relevante.</p></div>`;
-
-    duties.forEach(duty => {
-        const links = duty.linkedArticles && duty.linkedArticles.length
-            ? duty.linkedArticles.map(id => {
-                const art = getArticleById(id);
-                if (art) {
-                    return `<button class="btn btn-small" onclick="navigate('article','${id}')">${escapeHtml(art.moduleName)} art. ${escapeHtml(art.articleNum)}</button>`;
-                }
-                return `<span class="muted">${escapeHtml(id)}</span>`;
-            }).join(' ')
-            : '<em>De completat</em>';
-
-        html += `
-            <div class="card">
-                <p><strong>${escapeHtml(duty.id)}.</strong> ${escapeHtml(duty.text)}</p>
-                <div class="muted mt-1">Articole relevante: ${links}</div>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-}
 
 // ===========================================================
 // Randare: Căutare
@@ -451,16 +506,16 @@ function init() {
         const hash = location.hash.slice(2);
         const [view, param] = hash.split('/');
         // param poate conține "?"; îl pasăm ca întreg.
-        renderView(view || 'modules', param ? param : undefined);
+        renderView(view || 'legislatie', param ? param : undefined);
     });
 
     // --- Randare inițială ---
     const initialHash = location.hash.slice(2);
     if (initialHash) {
         const [view, param] = initialHash.split('/');
-        renderView(view || 'modules', param ? param : undefined);
+        renderView(view || 'legislatie', param ? param : undefined);
     } else {
-        renderView('modules');
+        renderView('legislatie');
     }
 }
 
