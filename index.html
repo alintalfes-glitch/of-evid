@@ -13,8 +13,7 @@
     </header>
 
     <nav id="mainNav">
-        <button data-view="dashboard" class="active">Acasă</button>
-        <button data-view="modules">Bibliotecă</button>
+        <button data-view="modules" class="active">Bibliotecă</button>
         <button data-view="duties">Atribuții</button>
         <button data-view="search">Căutare</button>
     </nav>
@@ -24,6 +23,13 @@
     <footer>
         <p>Progres salvat local în browser. Poți studia offline.</p>
     </footer>
+
+    <!-- Setează direct vizualizarea pe bibliotecă la deschidere -->
+    <script>
+        if (!location.hash) {
+            location.hash = '#/modules';
+        }
+    </script>
 
     <script src="js/data/manifest.js"></script>
     <script src="js/app.js"></script>
