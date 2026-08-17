@@ -1,7 +1,6 @@
 // ===========================================================
-// Pregătire Ofițer Evidență – Logica aplicației
-// Fără cuprins sticky, fără progres, fără quiz/flashcards
-// Cu format special pentru spețe de interviu
+// Portal Ofițer Evidență – Logica aplicației
+// Include: dark mode, căutare cu evidențiere, secțiuni pliabile
 // ===========================================================
 
 window.appData = {
@@ -9,6 +8,9 @@ window.appData = {
     examMethodologies: [],
     duties: []
 };
+
+// Variabilă globală pentru termenul curent de căutare (folosită la evidențiere)
+let currentSearchQuery = '';
 
 // ===========================================================
 // Utilitare
@@ -64,6 +66,22 @@ function getArticleById(id) {
 }
 
 // ===========================================================
+// Evidențiere termeni
+// ===========================================================
+function highlightText(text, query) {
+    if (!text) return '';
+    if (!query) return escapeHtml(text);
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'));
+    return parts.map(part => {
+        if (part.toLowerCase() === query.toLowerCase()) {
+            return `<mark>${escapeHtml(part)}</mark>`;
+        }
+        return escapeHtml(part);
+    }).join('');
+}
+
+// ===========================================================
 // Formatare specială pentru spețe
 // ===========================================================
 function formatSpețăArticle(art) {
@@ -78,8 +96,7 @@ function formatSpețăArticle(art) {
     const aIndex = text.indexOf(aMarker);
 
     if (qIndex === -1 || aIndex === -1) {
-        // fallback la afișare clasică
-        return `<div class="article-fulltext">${escapeHtml(text)}</div>`;
+        return `<div class="article-fulltext">${highlightText(text, currentSearchQuery)}</div>`;
     }
 
     const questionText = text.substring(qIndex + qMarker.length, aIndex).trim();
@@ -89,13 +106,13 @@ function formatSpețăArticle(art) {
         <div class="speta-block">
             <div class="speta-question">
                 <strong>ÎNTREBARE</strong>
-                <p style="margin-top:0.3rem; white-space:pre-wrap;">${escapeHtml(questionText)}</p>
+                <p style="margin-top:0.3rem; white-space:pre-wrap;">${highlightText(questionText, currentSearchQuery)}</p>
             </div>
             <details class="speta-answer-details">
-                <summary class="btn btn-small">Afișează răspuns</summary>
+                <summary>Afișează răspuns</summary>
                 <div class="speta-answer">
                     <strong>SUGESTIE RĂSPUNS</strong>
-                    <p style="margin-top:0.3rem; white-space:pre-wrap;">${escapeHtml(answerText)}</p>
+                    <p style="margin-top:0.3rem; white-space:pre-wrap;">${highlightText(answerText, currentSearchQuery)}</p>
                 </div>
             </details>
         </div>
@@ -121,21 +138,25 @@ function renderView(view, param) {
 
     switch (view) {
         case 'modules':
+            currentSearchQuery = '';  // reset la navigarea normală
             renderModules(app);
             break;
         case 'module':
+            currentSearchQuery = '';
             renderModuleDetail(app, param);
             break;
         case 'article':
             renderArticle(app, param);
             break;
         case 'duties':
+            currentSearchQuery = '';
             renderDuties(app);
             break;
         case 'search':
             renderSearch(app);
             break;
         default:
+            currentSearchQuery = '';
             renderModules(app);
     }
 
@@ -171,7 +192,7 @@ function renderModules(container) {
 }
 
 // ===========================================================
-// Randare: Modul (afișează toate articolele integral)
+// Randare: Modul (afișează toate articolele, cu secțiuni pliabile)
 // ===========================================================
 function renderModuleDetail(container, moduleId) {
     const mod = getAllModules().find(m => m.id === moduleId);
@@ -191,13 +212,25 @@ function renderModuleDetail(container, moduleId) {
     if (!mod.sections || mod.sections.length === 0) {
         html += `<div class="card"><div class="placeholder">Acest modul nu conține încă articole.</div></div>`;
     } else {
+        // Butoane globale pentru secțiuni pliabile
+        html += `
+            <div class="card" style="padding:0.75rem 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button class="btn btn-small" onclick="toggleAllSections(true)">Extinde tot</button>
+                <button class="btn btn-small" onclick="toggleAllSections(false)">Închide tot</button>
+            </div>
+        `;
+
         mod.sections.forEach(section => {
             html += `<div class="card"><h3>${escapeHtml(section.title)}</h3>`;
             if (!section.subsections || section.subsections.length === 0) {
                 html += `<div class="placeholder">Nicio subsecțiune definită.</div>`;
             } else {
                 section.subsections.forEach(sub => {
-                    html += `<div class="mt-1 mb-1"><strong>${escapeHtml(sub.title)}</strong>`;
+                    // Secțiune pliabilă pentru fiecare subsecțiune
+                    html += `<details class="collapse-section">`;
+                    html += `<summary>${escapeHtml(sub.title)}</summary>`;
+                    html += `<div class="collapse-content">`;
+
                     if (!sub.articles || sub.articles.length === 0) {
                         html += `<div class="placeholder">📌 Articolele urmează să fie adăugate.</div>`;
                     } else {
@@ -207,18 +240,19 @@ function renderModuleDetail(container, moduleId) {
                             const contentHtml = isSpeta
                                 ? formatSpețăArticle(art)
                                 : (art.fullText
-                                    ? `<div class="article-fulltext">${escapeHtml(art.fullText)}</div>`
+                                    ? `<div class="article-fulltext">${highlightText(art.fullText, currentSearchQuery)}</div>`
                                     : `<div class="placeholder">Textul integral urmează să fie adăugat.</div>`);
 
                             html += `
-                                <div id="${artId}" style="padding-top:1rem; margin-top:1rem; border-top:1px solid #e5e7eb;">
+                                <div id="${artId}" style="padding-top:1rem; margin-top:1rem; border-top:1px solid var(--border);">
                                     <h4 style="color:var(--accent); font-weight:600; margin-bottom:0.5rem;">Art. ${escapeHtml(art.num)} – ${escapeHtml(art.title)}</h4>
                                     ${contentHtml}
                                 </div>
                             `;
                         });
                     }
-                    html += `</div>`;
+
+                    html += `</div></details>`;
                 });
             }
             html += `</div>`;
@@ -231,7 +265,12 @@ function renderModuleDetail(container, moduleId) {
 // ===========================================================
 // Randare: Articol individual (deschide modulul și derulează)
 // ===========================================================
-function renderArticle(container, articleId) {
+function renderArticle(container, articleParam) {
+    // articleParam poate fi "id?q=termen"
+    const [articleId, queryPart] = articleParam.split('?');
+    const query = queryPart ? decodeURIComponent(queryPart.replace('q=', '')) : '';
+    currentSearchQuery = query;
+
     const article = getArticleById(articleId);
     if (!article) {
         container.innerHTML = `<div class="card">Articol inexistent. <button class="btn" onclick="navigate('modules')">Înapoi</button></div>`;
@@ -253,6 +292,15 @@ function scrollToArticle(articleId) {
         }
     }
 }
+
+// ===========================================================
+// Funcții globale pentru secțiuni pliabile
+// ===========================================================
+window.toggleAllSections = function(expand) {
+    document.querySelectorAll('details.collapse-section').forEach(d => {
+        d.open = expand;
+    });
+};
 
 // ===========================================================
 // Randare: Atribuții post
@@ -324,9 +372,9 @@ function performSearch(query) {
     }
 
     resultsContainer.innerHTML = filtered.map(a => `
-        <div class="list-item" onclick="navigate('article','${a.id}')" style="cursor:pointer;">
-            <strong>${escapeHtml(a.moduleName)} – Art. ${escapeHtml(a.articleNum)}</strong>
-            <p class="muted">${escapeHtml(a.title)}</p>
+        <div class="list-item" onclick="navigate('article','${a.id}?q=${encodeURIComponent(q)}')" style="cursor:pointer;">
+            <strong>${highlightText(a.moduleName + ' – Art. ' + a.articleNum, q)}</strong>
+            <p class="muted">${highlightText(a.title, q)}</p>
         </div>
     `).join('');
 }
@@ -354,77 +402,22 @@ async function loadAllDataFiles() {
 // Inițializare
 // ===========================================================
 function init() {
-    // Stiluri suplimentare pentru spețe și back-to-top
-    const style = document.createElement('style');
-    style.textContent = `
-        .back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: background var(--transition), transform var(--transition);
-            z-index: 20;
-        }
-        .back-to-top:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-        .back-to-top.visible {
-            display: flex;
-        }
+    // --- Dark mode ---
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+    }
 
-        .speta-block {
-            margin-top: 0.5rem;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: #fafbff;
-            box-shadow: var(--shadow-sm);
-        }
-        .speta-question {
-            margin-bottom: 0.5rem;
-        }
-        .speta-answer-details {
-            margin-top: 0.5rem;
-            border-top: 1px dashed var(--border);
-            padding-top: 0.5rem;
-        }
-        .speta-answer-details summary {
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--accent);
-            display: inline-block;
-        }
-        .speta-answer {
-            margin-top: 0.5rem;
-            padding: 1rem;
-            background: #f1f5f9;
-            border-radius: 8px;
-        }
-        @media (max-width: 700px) {
-            .back-to-top {
-                bottom: 1.25rem;
-                right: 1.25rem;
-                width: 42px;
-                height: 42px;
-                font-size: 1.3rem;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Crează butonul "Înapoi sus"
+    // --- Butonul „Înapoi sus” ---
     const backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
     backToTop.className = 'back-to-top';
@@ -443,7 +436,7 @@ function init() {
         }
     });
 
-    // Navigare prin butoane
+    // --- Navigare prin butoane ---
     document.querySelectorAll('#mainNav button').forEach(btn => {
         btn.addEventListener('click', () => {
             const view = btn.dataset.view;
@@ -451,18 +444,22 @@ function init() {
         });
     });
 
-    // Gestionare hashchange
+    // --- Gestionare hashchange ---
     window.addEventListener('hashchange', () => {
         const hash = location.hash.slice(2);
         const [view, param] = hash.split('/');
-        renderView(view || 'modules', param);
+        // param poate conține "?" pentru query; dar aici îl pasăm ca întreg,
+        // iar renderView îl va gestiona.
+        // Pentru view-urile simple, param poate fi undefined.
+        const cleanParam = param ? param : undefined;
+        renderView(view || 'modules', cleanParam);
     });
 
-    // Randare inițială
+    // --- Randare inițială ---
     const initialHash = location.hash.slice(2);
     if (initialHash) {
         const [view, param] = initialHash.split('/');
-        renderView(view || 'modules', param);
+        renderView(view || 'modules', param ? param : undefined);
     } else {
         renderView('modules');
     }
