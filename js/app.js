@@ -106,7 +106,13 @@ function renderView(view, param) {
 // ===========================================================
 function renderModules(container) {
     const modules = getAllModules();
-    let html = `<div class="card"><h2>📚 Bibliotecă</h2><p class="muted">Selectează un act normativ pentru a citi articolele integral.</p></div>`;
+    let html = `<div class="card card-intro">
+        <div>
+            <h2>📚 Bibliotecă</h2>
+            <p class="muted">Selectează un act normativ pentru a citi articolele integral.</p>
+        </div>
+        <div class="intro-icon">📖</div>
+    </div>`;
 
     modules.forEach(mod => {
         html += `
@@ -124,7 +130,7 @@ function renderModules(container) {
 }
 
 // ===========================================================
-// Randare: Modul (afișează toate articolele integral)
+// Randare: Modul (afișează toate articolele integral + cuprins sticky)
 // ===========================================================
 function renderModuleDetail(container, moduleId) {
     const mod = getAllModules().find(m => m.id === moduleId);
@@ -133,12 +139,33 @@ function renderModuleDetail(container, moduleId) {
         return;
     }
 
+    // Construim cuprinsul sticky
+    let tocHtml = '';
+    if (mod.sections && mod.sections.length > 0) {
+        tocHtml = `<nav class="toc" aria-label="Cuprins modul">
+            <h4>📑 Cuprins</h4>`;
+        let hasArticles = false;
+        mod.sections.forEach(section => {
+            if (!section.subsections) return;
+            section.subsections.forEach(sub => {
+                if (!sub.articles || sub.articles.length === 0) return;
+                sub.articles.forEach(art => {
+                    hasArticles = true;
+                    const artId = generateArticleId(mod.id, art.num);
+                    tocHtml += `<a href="#${artId}" class="toc-link" onclick="event.preventDefault(); scrollToArticle('${artId}');">Art. ${escapeHtml(art.num)} – ${escapeHtml(art.title)}</a>`;
+                });
+            });
+        });
+        tocHtml += `</nav>`;
+    }
+
     let html = `
         <div class="card">
             <h2>${escapeHtml(mod.name)}</h2>
             <p class="muted">${escapeHtml(mod.description || '')}</p>
             <button class="btn" onclick="navigate('modules')">← Înapoi la bibliotecă</button>
         </div>
+        ${tocHtml}
     `;
 
     if (!mod.sections || mod.sections.length === 0) {
@@ -157,7 +184,7 @@ function renderModuleDetail(container, moduleId) {
                         sub.articles.forEach(art => {
                             const artId = generateArticleId(mod.id, art.num);
                             html += `
-                                <div id="${artId}" style="padding-top:1rem; margin-top:1rem; border-top:1px solid #e5e7eb;">
+                                <div id="${artId}" class="article-anchor" style="padding-top:1rem; margin-top:1rem; border-top:1px solid #e5e7eb;">
                                     <h4 style="color:var(--accent); font-weight:600; margin-bottom:0.5rem;">Art. ${escapeHtml(art.num)} – ${escapeHtml(art.title)}</h4>
                                     ${art.fullText ? `<div class="article-fulltext">${escapeHtml(art.fullText)}</div>` : `<div class="placeholder">Textul integral urmează să fie adăugat.</div>`}
                                 </div>
@@ -185,9 +212,19 @@ function renderArticle(container, articleId) {
     }
 
     renderModuleDetail(container, article.moduleId);
-    const targetElement = document.getElementById(articleId);
-    if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToArticle(articleId);
+}
+
+function scrollToArticle(articleId) {
+    const el = document.getElementById(articleId);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Ajustează scroll sub nav-ul sticky, dacă este cazul
+        const nav = document.getElementById('mainNav');
+        if (nav) {
+            const navHeight = nav.getBoundingClientRect().height;
+            window.scrollBy({ top: -navHeight - 10, behavior: 'smooth' });
+        }
     }
 }
 
@@ -291,6 +328,107 @@ async function loadAllDataFiles() {
 // Inițializare
 // ===========================================================
 function init() {
+    // Adaugă stiluri pentru cuprins sticky și butonul "Înapoi sus"
+    const style = document.createElement('style');
+    style.textContent = `
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 65px;
+            z-index: 5;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .toc h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .toc-link {
+            display: block;
+            padding: 0.3rem 0;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88rem;
+            border-bottom: 1px dashed var(--border);
+        }
+        .toc-link:last-child {
+            border-bottom: none;
+        }
+        .toc-link:hover {
+            text-decoration: underline;
+            color: var(--accent-hover);
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition), transform var(--transition);
+            z-index: 20;
+        }
+        .back-to-top:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .back-to-top.visible {
+            display: flex;
+        }
+        @media (max-width: 700px) {
+            .toc {
+                top: 55px;
+                max-height: 50vh;
+                padding: 0.85rem 1rem;
+            }
+            .back-to-top {
+                bottom: 1.25rem;
+                right: 1.25rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.3rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Crează butonul "Înapoi sus"
+    const backToTop = document.createElement('button');
+    backToTop.id = 'backToTop';
+    backToTop.className = 'back-to-top';
+    backToTop.setAttribute('aria-label', 'Înapoi sus');
+    backToTop.innerHTML = '↑';
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.body.appendChild(backToTop);
+
+    // Ascunde/afișează butonul în funcție de scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    // Navigare prin butoane
     document.querySelectorAll('#mainNav button').forEach(btn => {
         btn.addEventListener('click', () => {
             const view = btn.dataset.view;
@@ -298,12 +436,14 @@ function init() {
         });
     });
 
+    // Gestionare hashchange
     window.addEventListener('hashchange', () => {
         const hash = location.hash.slice(2);
         const [view, param] = hash.split('/');
         renderView(view || 'modules', param);
     });
 
+    // Randare inițială
     const initialHash = location.hash.slice(2);
     if (initialHash) {
         const [view, param] = initialHash.split('/');
@@ -313,6 +453,7 @@ function init() {
     }
 }
 
+// Pornire aplicație
 loadAllDataFiles()
     .then(() => {
         init();
