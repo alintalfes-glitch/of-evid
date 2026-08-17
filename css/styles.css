@@ -2,6 +2,7 @@
    Pregătire Ofițer Evidență – Stiluri generale
    Design modern, curat, adaptat pentru:
    Bibliotecă, Atribuții, Căutare, Articole
+   Cuprins sticky + Buton „Înapoi sus” incluse
    =========================================================== */
 
 :root {
@@ -218,7 +219,7 @@ footer {
     font-size: 0.88rem;
 }
 
-/* Cardul intro al bibliotecii */
+/* Card intro bibliotecă */
 .card-intro {
     display: flex;
     align-items: center;
@@ -411,6 +412,81 @@ textarea {
 }
 
 /* ===========================================================
+   Cuprins sticky (TOC)
+   =========================================================== */
+.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 65px;              /* sub nav sticky */
+    z-index: 5;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.toc h4 {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.toc-link {
+    display: block;
+    padding: 0.3rem 0;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.88rem;
+    border-bottom: 1px dashed var(--border);
+    transition: color var(--transition), text-decoration var(--transition);
+}
+
+.toc-link:last-child {
+    border-bottom: none;
+}
+
+.toc-link:hover {
+    text-decoration: underline;
+    color: var(--accent-hover);
+}
+
+/* ===========================================================
+   Buton „Înapoi sus”
+   =========================================================== */
+.back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition), transform var(--transition);
+    z-index: 20;
+}
+
+.back-to-top:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.back-to-top.visible {
+    display: flex;
+}
+
+/* ===========================================================
    Utilitare
    =========================================================== */
 .grid {
@@ -460,6 +536,20 @@ textarea {
         padding: 0.85rem 1rem;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .toc {
+        top: 55px;          /* sub nav pe mobil */
+        max-height: 50vh;
+        padding: 0.85rem 1rem;
+    }
+
+    .back-to-top {
+        bottom: 1.25rem;
+        right: 1.25rem;
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
     }
 
     .grid {
