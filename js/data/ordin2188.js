@@ -6,7 +6,7 @@
 // ===========================================================
 window.appData.legislation.push({
     id: 'omj2188',
-    name: 'Ordinul MJ nr. 2188/C/2022)',
+    name: 'Ordinul MJ nr. 2188/C/2022',
     type: 'legislatie',
     description: 'Instrucțiuni privind evidența persoanelor private de libertate',
     sections: [
